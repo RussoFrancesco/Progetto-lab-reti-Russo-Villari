@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import ray
+import time
 
 # URL del dataset
 dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
@@ -115,6 +116,7 @@ def kmeans():
     partitions =split(dataset_scaled,n_MAP)
 
     ray.init()
+    init=time.time()
     while True:
         #MAP
         map_futures = [kmeans_map.remote(partition, centroids) for partition in partitions]
@@ -143,7 +145,10 @@ def kmeans():
         else:
             centroids = new_centroids
 
+    end=time.time()
     ray.shutdown()
+
+    print(f"Tempo di esecuzione: {end-init} secondi")
 
     # Calcola etichette finali dei cluster
     final_labels = []
@@ -154,6 +159,8 @@ def kmeans():
 
     # Visualizza i cluster
     plot_cluster(dataset_scaled, final_labels, centroids)
+
+
 
 # Esegui K-Means
 kmeans()
