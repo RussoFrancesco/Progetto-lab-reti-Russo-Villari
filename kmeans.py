@@ -35,7 +35,7 @@ def elbow_plot(data,max_k):
 def plot_cluster(dataset, labels, centroids):    
     plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
     plt.scatter(centroids[:, 0], centroids[:, 1], marker="*", color='red')
-    plt.title('Visualizzazione dei Cluster')
+    plt.title('Cluster')
     plt.show()
 
 def choose_centroids(dataset_scaled, k):
