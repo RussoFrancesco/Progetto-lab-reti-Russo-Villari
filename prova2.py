@@ -3,6 +3,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+import numpy as np
 
 def elbow_plot(data,max_k):
     means=[]
@@ -42,30 +43,34 @@ features = [
 
 # Separare le caratteristiche
 X = data[features]
+print(X)
 
-elbow_plot(X,18)
+#elbow_plot(X,18)
 
 # Standardizzazione dei dati
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
+df = np.array_split(X_scaled, 3)
 
+for i, part in enumerate(df):
+    print(f"parte {i}: {part}\n ######################################################")
 
-# Riduzione della dimensionalità con PCA
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X_scaled)
+## Riduzione della dimensionalità con PCA
+#pca = PCA(n_components=2)
+#X_pca = pca.fit_transform(X_scaled)
 
-# Esegui KMeans con 3 cluster
-kmeans = KMeans(n_clusters=4,random_state=0)
-kmeans.fit(X_scaled)
+## Esegui KMeans con 3 cluster
+#kmeans = KMeans(n_clusters=4,random_state=0)
+#kmeans.fit(X_scaled)
 
-# Aggiungi i cluster al dataframe originale
-data['Cluster'] = kmeans.labels_
+## Aggiungi i cluster al dataframe originale
+#data['Cluster'] = kmeans.labels_
 
-# Visualizza i cluster
-plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],color="red",marker="*")
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=data['Cluster'], cmap='viridis')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.title('Visualizzazione dei Cluster')
-plt.show()
+## Visualizza i cluster
+#plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],color="red",marker="*")
+#plt.scatter(X_pca[:, 0], X_pca[:, 1], c=data['Cluster'], cmap='viridis')
+#plt.xlabel('Principal Component 1')
+#plt.ylabel('Principal Component 2')
+#plt.title('Visualizzazione dei Cluster')
+#plt.show()
