@@ -3,17 +3,31 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import ray
 
 
 # X=set di dati
 
-dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
+dataset_url = 'https://archive.ics.uci.edu/static/public/519/data.csv'
 # Selezionare le caratteristiche per il clustering (escludere 'ca_cervix')
 features = [
-    'behavior_eating'
+    'serum_sodium', 'creatinine_phosphokinase'
 ]
+
+def plot_cluster(dataset,labels, centroids):
+    # Riduzione della dimensionalità con PCA
+    pca = PCA(n_components=2)
+    #X_pca = pca.fit_transform(dataset)
+    
+    #plot
+    plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
+    plt.scatter(centroids[:, 0], centroids[:, 1], marker="*")
+    #plt.xlabel('Principal Component 1')
+    #plt.ylabel('Principal Component 2')
+    plt.title('Visualizzazione dei Cluster')
+    plt.show()
 
 
 def create_dataset(dataset_url,features):
@@ -78,9 +92,6 @@ def kmeansMap(points,centroids):
         del distances
     
     return map_res
-
-
-
 
 
 @ray.remote
@@ -161,9 +172,17 @@ def kmins():
         else:
             centroids=new_centroids
 
-
     ray.shutdown()
+    
+     # calcolo distanze minime un'ultima volta per appendere il dato del cluster sul dataset (csv)
+    final_labels = []
+    for point in dataset_scaled:
+        distances = ecluidean(point, centroids)
+        cluster = np.argmin(distances)
+        final_labels.append(cluster)
 
+    # Plot dei cluster
+    plot_cluster(dataset_scaled, final_labels, centroids)
 
 
 kmins()
