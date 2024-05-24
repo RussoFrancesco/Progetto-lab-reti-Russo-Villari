@@ -1,8 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-import numpy as np
-from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
 def elbow_plot(data,max_k):
@@ -23,18 +22,14 @@ def elbow_plot(data,max_k):
     plt.grid(True)
     plt.show()
 
-
-# Caricare i dati
+# Carica i dati
 data_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
 data = pd.read_csv(data_url)
 
-# Verificare i primi record per assicurarsi che il caricamento sia corretto
-print(data)
-
-#RIMUOVI CAMPI VUOTI 
+# Rimuovi eventuali valori mancanti
 data.dropna(inplace=True)
 
-# Selezionare le caratteristiche per il clustering (escludere 'ca_cervix')
+# Seleziona le caratteristiche per il clustering
 features = [
     'behavior_eating', 'behavior_personalHygiene', 'intention_aggregation',
     'intention_commitment', 'attitude_consistency', 'attitude_spontaneity',
@@ -48,33 +43,29 @@ features = [
 # Separare le caratteristiche
 X = data[features]
 
-print(X.describe())
+elbow_plot(X,18)
 
-
-scaler=StandardScaler()
+# Standardizzazione dei dati
+scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
-#print(X_scaled)
-
-X_two_features = X_scaled[:, :2]
-
-#elbow_plot(X_two_features,10)
 
 
 
+# Riduzione della dimensionalità con PCA
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X_scaled)
 
-kmeans = KMeans(n_clusters=3)
-kmeans.fit(X_two_features)
+# Esegui KMeans con 3 cluster
+kmeans = KMeans(n_clusters=4,random_state=0)
+kmeans.fit(X_scaled)
 
+# Aggiungi i cluster al dataframe originale
+data['Cluster'] = kmeans.labels_
 
-X['Cluster'] = kmeans.labels_
-
-print(X.head())
-
-# Visualizzare i cluster (opzionale, se il dataset è abbastanza piccolo)
-plt.scatter(X_two_features[:, 0], X_two_features[:, 1], c=X['Cluster'], cmap='viridis')
-plt.xlabel(features[0])
-plt.ylabel(features[1])
+# Visualizza i cluster
+plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,1],color="red",marker="*")
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=data['Cluster'], cmap='viridis')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
 plt.title('Visualizzazione dei Cluster')
 plt.show()
-
-
