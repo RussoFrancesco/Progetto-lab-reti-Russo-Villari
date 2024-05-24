@@ -61,7 +61,7 @@ def split(data,num_partition):
     partitions = np.array_split(data, num_partition)
     return partitions
 
-def ecluidean(data_point, centroids):
+def euclidean(data_point, centroids):
     #calcolo distanza euclidea (centroide-punto)^2 (torna una lista con le distanze del punto da tutti i centroidi)
     return np.sqrt(np.sum((centroids - data_point)**2, axis=1))
 
@@ -70,7 +70,7 @@ def kmeans_map(points, centroids):
     map_results = []
     for point in points:
         #calcolo la distanza euclidea tra il punto e tutti i centroidi (torna una lista di distanze)
-        distances = ecluidean(point, centroids)
+        distances = euclidean(point, centroids)
         #recupero quella più piccola (torna l'indice)
         cluster = np.argmin(distances)
         #appendo alla lista di risultati
@@ -103,7 +103,6 @@ def kmeans():
 
     k_max = 19
     n_MAP = 5
-    n_REDUCE=3
 
     elbow_plot(dataset_scaled, k_max)
     k = int(input("Inserisci il numero di cluster (k): "))
@@ -123,7 +122,7 @@ def kmeans():
         map_results = ray.get(map_futures)
         
         # SHUFFLING
-        reduce_inputs = [[] for _ in range(k)]
+        reduce_inputs = [[] for _ in range(n_REDUCE)]
         for result in map_results:
             for element in result:
                 cluster_id = element[0]
@@ -153,7 +152,7 @@ def kmeans():
     # Calcola etichette finali dei cluster
     final_labels = []
     for point in dataset_scaled:
-        distances = np.linalg.norm(centroids - point, axis=1)
+        distances = euclidean(point, centroids)
         cluster = np.argmin(distances)
         final_labels.append(cluster)
 
