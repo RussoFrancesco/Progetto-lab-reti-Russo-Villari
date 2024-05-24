@@ -1,0 +1,94 @@
+<mxfile host="app.diagrams.net" modified="2024-05-24T17:35:03.558Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="D0SodWW7TlZRFihcKbN-" version="24.4.7" type="device">
+  <diagram name="Pagina-1" id="ET5hRYNgOpSCgY9amo1k">
+    <mxGraphModel dx="1050" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-1" target="A2EBaKPFqu7nKrdWnSEm-3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-1" value="Scegli K&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="20" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-3" target="A2EBaKPFqu7nKrdWnSEm-7" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-3" value="Scegli k valori medi random da X (punti)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="90" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-5" target="A2EBaKPFqu7nKrdWnSEm-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-5" value="&lt;div&gt;MAP&lt;/div&gt;Per ogni punto trova il valore medio + vicino&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;TORNA: (indice_media,(x,1))&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="290" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-7" target="A2EBaKPFqu7nKrdWnSEm-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-7" target="A2EBaKPFqu7nKrdWnSEm-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-7" target="A2EBaKPFqu7nKrdWnSEm-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-7" value="Splitting" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="170" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-8" target="A2EBaKPFqu7nKrdWnSEm-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-8" value="&lt;div&gt;MAP&lt;/div&gt;Per ogni punto trova il valore medio + vicino&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;TORNA: (indice_media,(x,1))&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="290" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-9" target="A2EBaKPFqu7nKrdWnSEm-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-9" value="&lt;div&gt;MAP&lt;/div&gt;Per ogni punto trova il valore medio + vicino&amp;nbsp;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;TORNA: (indice_media,(x,1))&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="600" y="290" width="120" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="240" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-14" value="Shuffling&lt;div&gt;(basato su&amp;nbsp; k)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="450" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-20" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="380" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-20" value="REDUCE&lt;div&gt;Sommatoria punti (&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start; text-wrap: nowrap; background-color: initial;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22%26lt%3Bdiv%26gt%3BMAP%26lt%3B%2Fdiv%26gt%3BPer%20ogni%20punto%20trova%20il%20valore%20medio%20%2B%20vicino%26amp%3Bnbsp%3B%26lt%3Bdiv%26gt%3B%26lt%3Bbr%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3BTORNA%3A%20(indice_media%2C(x%2C1))%26lt%3B%2Fdiv%26gt%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2260%22%20y%3D%22290%22%20width%3D%22120%22%20height%3D%22110%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;i,[(x,s),(y,t)])&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;TORNA:&lt;/div&gt;&lt;div&gt;(indice_media,[(x,y,s+t)])&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="610" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-21" value="REDUCE&lt;div&gt;Sommatoria punti (&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start; text-wrap: nowrap; background-color: initial;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22%26lt%3Bdiv%26gt%3BMAP%26lt%3B%2Fdiv%26gt%3BPer%20ogni%20punto%20trova%20il%20valore%20medio%20%2B%20vicino%26amp%3Bnbsp%3B%26lt%3Bdiv%26gt%3B%26lt%3Bbr%26gt%3B%26lt%3B%2Fdiv%26gt%3B%26lt%3Bdiv%26gt%3BTORNA%3A%20(indice_media%2C(x%2C1))%26lt%3B%2Fdiv%26gt%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2260%22%20y%3D%22290%22%20width%3D%22120%22%20height%3D%22110%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;i,[(x,s),(y,t)])&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;TORNA:&lt;/div&gt;&lt;div&gt;(indice_media,[(x,y,s+t)])&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="440" y="610" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="A2EBaKPFqu7nKrdWnSEm-24" target="A2EBaKPFqu7nKrdWnSEm-26" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-24" value="CALCOLA NUOVI CENTROIDI&amp;nbsp;&lt;div&gt;somma x / n punti&lt;/div&gt;&lt;div&gt;somma y / n punti&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="800" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="A2EBaKPFqu7nKrdWnSEm-26" value="Manda in broadcast i nuovi centroidi" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="340" y="920" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
