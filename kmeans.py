@@ -6,12 +6,32 @@ import matplotlib.pyplot as plt
 import ray
 
 # URL del dataset
-dataset_url = 'https://archive.ics.uci.edu/static/public/519/data.csv'
+dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
 
-# Selezionare le caratteristiche per il clustering (escludere 'ca_cervix')
-features = ['serum_sodium', 'creatinine_phosphokinase']
+# Seleziono le caratteristiche per il clustering 
+features = [
+    'behavior_eating', 'behavior_personalHygiene'
+]
+def elbow_plot(data,max_k):
+    means=[]
+    inertias=[]
 
-def plot_cluster(dataset, labels, centroids):
+    for k in range(1,max_k):
+        k_means=KMeans(n_clusters=k)
+        k_means.fit(data)
+
+        means.append(k)
+        inertias.append(k_means.inertia_)
+    
+    fig=plt.subplots(figsize=(10,5))
+    plt.plot(means,inertias,'o-')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Inertia')
+    plt.grid(True)
+    plt.show()
+
+
+def plot_cluster(dataset, labels, centroids):    
     plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
     plt.scatter(centroids[:, 0], centroids[:, 1], marker="*", color='red')
     plt.title('Visualizzazione dei Cluster')
@@ -21,32 +41,52 @@ def choose_centroids(dataset_scaled, k):
     return dataset_scaled[np.random.choice(dataset_scaled.shape[0], size=k, replace=False)]
 
 def prepare_data(dataset_url, features):
+    #leggo file csv
     dataset = pd.read_csv(dataset_url)
+    
+    #rimuovo record con campi vuoti 
     dataset.dropna(inplace=True)
+    
+    #prendo solo e feature analizzate per il k means
     clean_dataset = dataset[features]
+    
+    #normalizzo i dati
     scaler = StandardScaler()
     dataset_scaled = scaler.fit_transform(clean_dataset)
+
     return dataset_scaled
 
+def split(data,num_partition):
+    partitions = np.array_split(data, num_partition)
+    return partitions
+
 def ecluidean(data_point, centroids):
+    #calcolo distanza euclidea (centroide-punto)^2 (torna una lista con le distanze del punto da tutti i centroidi)
     return np.sqrt(np.sum((centroids - data_point)**2, axis=1))
 
 @ray.remote
 def kmeans_map(points, centroids):
     map_results = []
     for point in points:
+        #calcolo la distanza euclidea tra il punto e tutti i centroidi (torna una lista di distanze)
         distances = ecluidean(point, centroids)
+        #recupero quella più piccola (torna l'indice)
         cluster = np.argmin(distances)
+        #appendo alla lista di risultati
         map_results.append((cluster, (point, 1)))
     return map_results
 
 @ray.remote
 def kmeans_reduce(cluster, points):
+    #print(points)
+    #somma tutti i punti
     sum_points = np.sum(points, axis=0)
+    #numero di punti
     num_points = len(points)
     return cluster, sum_points, num_points
 
 def calculate_new_centroids(reduce_results):
+    #ricevo: [(indice_cluster, sommatoria_punti, n_punti),...]
     new_centroids = []
     for cluster, sum_points, num_points in reduce_results:
         centroid = sum_points / num_points
@@ -57,23 +97,30 @@ def calculate_new_centroids(reduce_results):
 def kmeans():
     global dataset_url, features
 
-    # Prepara i dati
+    #Scarico i dati 
     dataset_scaled = prepare_data(dataset_url, features)
-    k_max = 19
-    k = int(input("Inserisci il numero di cluster (k): "))
 
-    # Inizializza i centroidi
+    k_max = 19
+    n_MAP = 5
+    n_REDUCE=3
+
+    elbow_plot(dataset_scaled, k_max)
+    k = int(input("Inserisci il numero di cluster (k): "))
+    n_REDUCE=k
+
+    # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
 
-    # Inizializza Ray
-    ray.init()
+    #SPLIT
+    partitions =split(dataset_scaled,n_MAP)
 
+    ray.init()
     while True:
-        # Fase di mappatura
-        map_futures = [kmeans_map.remote(partition, centroids) for partition in np.array_split(dataset_scaled, ray.cluster_resources()['CPU'])]
+        #MAP
+        map_futures = [kmeans_map.remote(partition, centroids) for partition in partitions]
         map_results = ray.get(map_futures)
         
-        # Shuffling dei risultati
+        # SHUFFLING
         reduce_inputs = [[] for _ in range(k)]
         for result in map_results:
             for element in result:
@@ -81,9 +128,11 @@ def kmeans():
                 point = element[1][0]
                 reduce_inputs[cluster_id].append(point)
 
-        # Fase di riduzione
+        # REDUCE
         reduce_futures = [kmeans_reduce.remote(i, reduce_inputs[i]) for i in range(len(reduce_inputs))]
         reduce_results = ray.get(reduce_futures)
+        
+        #print(reduce_results)
 
         # Calcola nuovi centroidi
         new_centroids = calculate_new_centroids(reduce_results)
