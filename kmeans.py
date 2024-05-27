@@ -1,8 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import numpy as np
-from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import ray
 import time
 
@@ -11,7 +11,7 @@ dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
 
 # Seleziono le caratteristiche per il clustering 
 features = [
-    'behavior_eating', 'behavior_personalHygiene'
+    'behavior_eating', 'behavior_personalHygiene', 'intention_aggregation'
 ]
 def elbow_plot(data,max_k):
     means=[]
@@ -32,9 +32,12 @@ def elbow_plot(data,max_k):
     plt.show()
 
 
-def plot_cluster(dataset, labels, centroids):    
-    plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
-    plt.scatter(centroids[:, 0], centroids[:, 1], marker="*", color='red')
+def plot_cluster(dataset, labels, centroids): 
+    fig=plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], c=labels, cmap='viridis')   
+    #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
+    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], marker="*", color='red')
     plt.title('Cluster')
     plt.show()
 
