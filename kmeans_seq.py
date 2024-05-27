@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from mpl_toolkits.mplot3d import Axes3D
-import ray
 import time
 
 # URL del dataset
@@ -14,6 +13,7 @@ dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
 features = [
     'behavior_eating', 'behavior_personalHygiene', 'intention_aggregation'
 ]
+
 def elbow_plot(data,max_k):
     means=[]
     inertias=[]
@@ -63,109 +63,76 @@ def prepare_data(dataset_url, features):
 
     return dataset_scaled
 
-def split(data,num_partition):
-    #splitto il dataset in n sub-array
-    partitions = np.array_split(data, num_partition)
-    return partitions
 
 def euclidean(data_point, centroids):
     #calcolo distanza euclidea (centroide-punto)^2 (torna una lista con le distanze del punto da tutti i centroidi)
     return np.sqrt(np.sum((centroids - data_point)**2, axis=1))
 
-@ray.remote
-def kmeans_map(points, centroids):
-    map_results = []
-    for point in points:
-        #calcolo la distanza euclidea tra il punto e tutti i centroidi (torna una lista di distanze)
-        distances = euclidean(point, centroids)
-        #recupero quella più piccola (torna l'indice)
-        cluster = np.argmin(distances)
-        #appendo alla lista di risultati
-        map_results.append((cluster, (point, 1)))
-    return map_results
 
-@ray.remote
-def kmeans_reduce(cluster, points):
-    #print(points)
-    #somma tutti i punti
-    sum_points = np.sum(points, axis=0)
-    #numero di punti
-    num_points = len(points)
-    return cluster, sum_points, num_points
-
-def calculate_new_centroids(reduce_results):
-    #ricevo: [(indice_cluster, sommatoria_punti, n_punti),...]
+def calculate_new_centroids(clusters):
+    #clusters cluster0, cluster1, cluster2, ...
+    #ricevo: [[points],[points], [points],...]
     new_centroids = []
-    for cluster, sum_points, num_points in reduce_results:
-        centroid = sum_points / num_points
+    for cluster in clusters:
+        sum_points = np.sum(cluster, axis=0)
+        centroid = sum_points / len(cluster)
         new_centroids.append(centroid)
     return np.array(new_centroids)
 
 
 def kmeans():
+    '''PASSI :
+    1) Determino centroidi
+    2) Determino centroide con distanza minima per ogni x in X
+    3) Metto x nell'insieme dei punti apparenenti al singolo centroide 
+    4) Ripeto passi 2 e 3 finchè i centroidi non sono uguali su 2 iterazioni successive'''
     global dataset_url, features
 
     #Scarico i dati 
     dataset_scaled = prepare_data(dataset_url, features)
-
-    k_max = 19
-    n_MAP = 5
-
-    elbow_plot(dataset_scaled, k_max)
+    
+    k_max=19
+    #elbow_plot(dataset_scaled, k_max)
     k = int(input("Inserisci il numero di cluster (k): "))
-    n_REDUCE=k
+    
 
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
 
-    #SPLIT
-    partitions =split(dataset_scaled,n_MAP)
-
-    ray.init()
     init=time.time()
-    while True:
-        #MAP
-        map_futures = [kmeans_map.remote(partition, centroids) for partition in partitions]
-        map_results = ray.get(map_futures)
-        
-        # SHUFFLING
-        reduce_inputs = [[] for _ in range(n_REDUCE)]
-        for result in map_results:
-            for element in result:
-                cluster_id = element[0]
-                point = element[1][0]
-                reduce_inputs[cluster_id].append(point)
 
-        # REDUCE
-        reduce_futures = [kmeans_reduce.remote(i, reduce_inputs[i]) for i in range(len(reduce_inputs))]
-        reduce_results = ray.get(reduce_futures)
-        
-        #print(reduce_results)
+    while True:
+        #Inizializziamo la lista di cluster in base al numero di cluster da calcolare
+        clusters = [list() for _ in range(k)]
+        #Creo un array di zero in base alle righe del dataset
+        labels = np.zeros(dataset_scaled.shape[0])
+        for i, point in enumerate(dataset_scaled):
+            #Calcolo la distanza del punto dai centroidi
+            distances = euclidean(point, centroids)
+            #Recupero l'indice del centroide la cui distanza è minima
+            cluster = np.argmin(distances)
+            #Aggiungo il punto alla lista del cluster corrispondente
+            clusters[cluster].append(point)
+            #Assegno al punto i l'indice del cluster
+            labels[i] = cluster
 
         # Calcola nuovi centroidi
-        new_centroids = calculate_new_centroids(reduce_results)
+        new_centroids = calculate_new_centroids(clusters)
 
         # Confronta i nuovi centroidi con quelli precedenti
         if np.array_equal(new_centroids, centroids):
             break
         else:
+            for cluster in clusters:
+                cluster.clear()
             centroids = new_centroids
 
     end=time.time()
-    ray.shutdown()
 
     print(f"Tempo di esecuzione: {end-init} secondi")
-
-    # Calcola le distanze finali dei cluster 
-    final_labels = []
-    for point in dataset_scaled:
-        distances = euclidean(point, centroids)
-        cluster = np.argmin(distances)
-        final_labels.append(cluster)
-
-    print(final_labels)
+   
     # Visualizza i cluster
-    plot_cluster(dataset_scaled, final_labels, centroids)
+    plot_cluster(dataset_scaled, labels, centroids)
 
 
 
