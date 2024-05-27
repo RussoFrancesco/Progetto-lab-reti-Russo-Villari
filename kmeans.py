@@ -8,11 +8,11 @@ import ray
 import time
 
 # URL del dataset
-dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
+dataset_url = 'https://archive.ics.uci.edu/static/public/116/data.csv'
 
 # Seleziono le caratteristiche per il clustering 
 features = [
-    'behavior_eating', 'behavior_personalHygiene', 'intention_aggregation'
+    'dAge', 'dIncome1', 'dOccup'
 ]
 def elbow_plot(data,max_k):
     means=[]
@@ -109,7 +109,7 @@ def kmeans():
     dataset_scaled = prepare_data(dataset_url, features)
 
     k_max = 19
-    n_MAP = 5
+    n_MAP = 7
 
     elbow_plot(dataset_scaled, k_max)
     k = int(input("Inserisci il numero di cluster (k): "))
@@ -119,11 +119,14 @@ def kmeans():
     centroids = choose_centroids(dataset_scaled, k)
 
     #SPLIT
-    partitions =split(dataset_scaled,n_MAP)
+    partitions=split(dataset_scaled,n_MAP)
 
     ray.init()
     init=time.time()
+    v = 0
     while True:
+        v += 1
+        print(f"Ciclo {v}")
         #MAP
         map_futures = [kmeans_map.remote(partition, centroids) for partition in partitions]
         map_results = ray.get(map_futures)
@@ -163,7 +166,6 @@ def kmeans():
         cluster = np.argmin(distances)
         final_labels.append(cluster)
 
-    print(final_labels)
     # Visualizza i cluster
     plot_cluster(dataset_scaled, final_labels, centroids)
 

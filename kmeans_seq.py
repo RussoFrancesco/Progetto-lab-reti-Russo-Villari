@@ -7,13 +7,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import time
 
 # URL del dataset
-dataset_url = 'https://archive.ics.uci.edu/static/public/537/data.csv'
+dataset_url = 'https://archive.ics.uci.edu/static/public/116/data.csv'
 
 # Seleziono le caratteristiche per il clustering 
 features = [
-    'behavior_eating', 'behavior_personalHygiene', 'intention_aggregation'
+    'dAge', 'dIncome1', 'dOccup'
 ]
-
 def elbow_plot(data,max_k):
     means=[]
     inertias=[]
@@ -101,7 +100,9 @@ def kmeans():
 
     init=time.time()
 
+    v = 0
     while True:
+        print(f"Ciclo {v}")
         #Inizializziamo la lista di cluster in base al numero di cluster da calcolare
         clusters = [list() for _ in range(k)]
         #Creo un array di zero in base alle righe del dataset
