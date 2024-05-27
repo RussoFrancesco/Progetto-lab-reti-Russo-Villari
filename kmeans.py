@@ -35,6 +35,7 @@ def elbow_plot(data,max_k):
 
 def plot_cluster(dataset, labels, centroids): 
     fig=plt.figure()
+    #per grafico 3D
     ax = fig.add_subplot(projection='3d')
     ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], c=labels, cmap='viridis')   
     #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
@@ -43,6 +44,7 @@ def plot_cluster(dataset, labels, centroids):
     plt.show()
 
 def choose_centroids(dataset_scaled, k):
+    #seleziono k centroidi randomici prendendo dei punti dal dataset (torna le righe, ossia i punti selezionati)
     return dataset_scaled[np.random.choice(dataset_scaled.shape[0], size=k, replace=False)]
 
 def prepare_data(dataset_url, features):
@@ -62,6 +64,7 @@ def prepare_data(dataset_url, features):
     return dataset_scaled
 
 def split(data,num_partition):
+    #splitto il dataset in n sub-array
     partitions = np.array_split(data, num_partition)
     return partitions
 
@@ -153,7 +156,7 @@ def kmeans():
 
     print(f"Tempo di esecuzione: {end-init} secondi")
 
-    # Calcola etichette finali dei cluster
+    # Calcola le distanze finali dei cluster 
     final_labels = []
     for point in dataset_scaled:
         distances = euclidean(point, centroids)
