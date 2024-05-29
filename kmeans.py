@@ -7,7 +7,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import ray
 import time
 from create_points import create_points
-from write_on_file import write_on_file
 
 def elbow_plot(data,max_k):
     means=[]
@@ -101,12 +100,7 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     k = int(input("Inserisci il numero di cluster (k): "))
-    n_samples = int(input("Inserisci il numero di punti su cui effetturare il kmeans: "))
-    random_state = 42
-    dataset_scaled, _ = create_points(n_samples=n_samples, n_features=3, n_clusters=k, random_state=random_state)
-
-    seed = 0
-    np.random.seed(seed)
+    dataset_scaled, _ = create_points(n_samples=100000, n_features=3, n_clusters=k, random_state=42)
 
     k_max = 19
     n_MAP = 30
@@ -157,12 +151,11 @@ def kmeans():
         else:
             centroids = new_centroids
 
+
     end=time.time()
     ray.shutdown()
 
-    tempo = end - init
-
-    print(f"Tempo di esecuzione: {tempo} secondi")
+    print(f"Tempo di esecuzione: {end-init} secondi")
 
     # Calcola le distanze finali dei cluster 
     final_labels = []
@@ -170,12 +163,9 @@ def kmeans():
         distances = euclidean(point, centroids)
         cluster = np.argmin(distances)
         final_labels.append(cluster)
-    
-    write_on_file("result.csv", n_samples, k, tempo, "Distribuito", seed, random_state)
 
     # Visualizza i cluster
     plot_cluster(dataset_scaled, final_labels, centroids)
-
 
 
 

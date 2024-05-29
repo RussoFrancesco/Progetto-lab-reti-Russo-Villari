@@ -6,7 +6,6 @@ from sklearn.cluster import KMeans
 from mpl_toolkits.mplot3d import Axes3D
 import time
 from create_points import create_points
-from write_on_file import write_on_file
 
 
 def elbow_plot(data,max_k):
@@ -32,7 +31,7 @@ def plot_cluster(dataset, labels, centroids):
     fig=plt.figure()
     #per grafico 3D
     ax = fig.add_subplot(projection='3d')
-    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.05,c=labels, cmap='Pastel1')   
+    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.05,c=labels, cmap='summer')   
     #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
     ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], alpha=1, marker="*", color='red')
     plt.title('Cluster')
@@ -83,12 +82,8 @@ def kmeans():
     4) Ripeto passi 2 e 3 finchè i centroidi non sono uguali su 2 iterazioni successive'''
     
     k = int(input("Inserisci il numero di cluster (k): "))
-    n_samples = int(input("Inserisci il numero di punti su cui effetturare il kmeans: "))
-    random_state = 42
-    dataset_scaled, _ = create_points(n_samples=n_samples, n_features=3, n_clusters=k, random_state=random_state)
+    dataset_scaled, _ = create_points(n_samples=1000000, n_features=3, n_clusters=k, random_state=42)
 
-    seed = 0
-    np.random.seed(seed)
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
 
@@ -113,6 +108,7 @@ def kmeans():
             #Assegno al punto i l'indice del cluster
             labels[i] = cluster
 
+
         # Calcola nuovi centroidi
         new_centroids = calculate_new_centroids(clusters)
 
@@ -126,11 +122,7 @@ def kmeans():
 
     end=time.time()
 
-    tempo = end - init
-
     print(f"Tempo di esecuzione: {end-init} secondi")
-
-    write_on_file("result.csv", n_samples, k, tempo, "Sequenziale", seed, random_state)
    
     # Visualizza i cluster
     plot_cluster(dataset_scaled, labels, centroids)
