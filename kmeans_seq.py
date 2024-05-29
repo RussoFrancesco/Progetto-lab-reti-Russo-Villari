@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 from mpl_toolkits.mplot3d import Axes3D
 import time
 from create_points import create_points
+from write_on_file import write_on_file
 
 
 def elbow_plot(data,max_k):
@@ -82,8 +83,12 @@ def kmeans():
     4) Ripeto passi 2 e 3 finchè i centroidi non sono uguali su 2 iterazioni successive'''
     
     k = int(input("Inserisci il numero di cluster (k): "))
-    dataset_scaled, _ = create_points(n_samples=1000000, n_features=3, n_clusters=k, random_state=42)
+    n_samples = int(input("Inserisci il numero di punti su cui effetturare il kmeans: "))
+    random_state = 42
+    dataset_scaled, _ = create_points(n_samples=n_samples, n_features=3, n_clusters=k, random_state=random_state)
 
+    seed = 0
+    np.random.seed(seed)
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
 
@@ -121,7 +126,11 @@ def kmeans():
 
     end=time.time()
 
+    tempo = end - init
+
     print(f"Tempo di esecuzione: {end-init} secondi")
+
+    write_on_file("result.csv", n_samples, k, tempo, "Sequenziale", seed, random_state)
    
     # Visualizza i cluster
     plot_cluster(dataset_scaled, labels, centroids)
