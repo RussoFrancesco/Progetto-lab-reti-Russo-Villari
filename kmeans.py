@@ -39,7 +39,7 @@ def plot_cluster(dataset, labels, centroids):
     plt.show()
 
 def choose_centroids(dataset_scaled, k):
-    np.random.seed(0)
+    np.random.seed(3)
     #seleziono k centroidi randomici prendendo dei punti dal dataset (torna le righe, ossia i punti selezionati)
     return dataset_scaled[np.random.choice(dataset_scaled.shape[0], size=k, replace=False)]
 
@@ -102,7 +102,8 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     k = int(input("Inserisci il numero di cluster (k): "))
-    dataset_scaled, _ = create_points(n_samples=100000, n_features=3, n_clusters=k, random_state=42)
+    n_punti = 40000000
+    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=3, n_clusters=k, random_state=42)
 
     k_max = 19
     n_MAP = 30
@@ -166,9 +167,9 @@ def kmeans():
         cluster = np.argmin(distances)
         final_labels.append(cluster)
 
-    write_on_file("tempi.csv",100000,3,end-init,"Distribuito",0,42)
+    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42)
     # Visualizza i cluster
-    plot_cluster(dataset_scaled, final_labels, centroids)
+    #plot_cluster(dataset_scaled, final_labels, centroids)
 
 
 

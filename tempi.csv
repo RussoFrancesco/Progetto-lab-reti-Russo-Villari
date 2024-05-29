@@ -1,2 +1,7 @@
 Numero di punti,Numero di cluster,Seed centroidi iniziali,Seed creazione punti,Tempo,Modalità
-100000,3,0,42,10.550646305084229,Distribuito
+500000,3,3,42,38.69880962371826,Distribuito
+500000,3,3,42,11.270809173583984,Sequenziale
+1000000,3,3,42,101.11570715904236,Distribuito
+1000000,3,3,42,30.59341073036194,Sequenziale
+5000000,3,3,42,476.03889989852905,Distribuito
+5000000,3,3,42,115.75412392616272,Sequenziale
