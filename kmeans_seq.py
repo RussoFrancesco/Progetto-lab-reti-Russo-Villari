@@ -5,14 +5,9 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from mpl_toolkits.mplot3d import Axes3D
 import time
+from create_points import create_points
 
-# URL del dataset
-dataset_url = 'https://archive.ics.uci.edu/static/public/116/data.csv'
 
-# Seleziono le caratteristiche per il clustering 
-features = [
-    'dAge', 'dIncome1', 'dOccup'
-]
 def elbow_plot(data,max_k):
     means=[]
     inertias=[]
@@ -36,9 +31,9 @@ def plot_cluster(dataset, labels, centroids):
     fig=plt.figure()
     #per grafico 3D
     ax = fig.add_subplot(projection='3d')
-    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], c=labels, cmap='viridis')   
+    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.05,c=labels, cmap='Pastel1')   
     #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
-    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], marker="*", color='red')
+    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], alpha=1, marker="*", color='red')
     plt.title('Cluster')
     plt.show()
 
@@ -85,15 +80,9 @@ def kmeans():
     2) Determino centroide con distanza minima per ogni x in X
     3) Metto x nell'insieme dei punti apparenenti al singolo centroide 
     4) Ripeto passi 2 e 3 finchè i centroidi non sono uguali su 2 iterazioni successive'''
-    global dataset_url, features
-
-    #Scarico i dati 
-    dataset_scaled = prepare_data(dataset_url, features)
     
-    k_max=19
-    #elbow_plot(dataset_scaled, k_max)
     k = int(input("Inserisci il numero di cluster (k): "))
-    
+    dataset_scaled, _ = create_points(n_samples=1000000, n_features=3, n_clusters=k, random_state=42)
 
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
@@ -101,7 +90,9 @@ def kmeans():
     init=time.time()
 
     v = 0
+    tol = 1e-3
     while True:
+        v += 1
         print(f"Ciclo {v}")
         #Inizializziamo la lista di cluster in base al numero di cluster da calcolare
         clusters = [list() for _ in range(k)]
@@ -120,12 +111,12 @@ def kmeans():
         # Calcola nuovi centroidi
         new_centroids = calculate_new_centroids(clusters)
 
-        # Confronta i nuovi centroidi con quelli precedenti
-        if np.array_equal(new_centroids, centroids):
+        centroid_shift = euclidean(new_centroids, centroids).mean()
+        print(f"Variazione dei centroidi {centroid_shift}")
+
+        if centroid_shift < tol:
             break
         else:
-            for cluster in clusters:
-                cluster.clear()
             centroids = new_centroids
 
     end=time.time()

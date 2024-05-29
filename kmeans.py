@@ -6,14 +6,8 @@ from sklearn.cluster import KMeans
 from mpl_toolkits.mplot3d import Axes3D
 import ray
 import time
+from create_points import create_points
 
-# URL del dataset
-dataset_url = 'https://archive.ics.uci.edu/static/public/116/data.csv'
-
-# Seleziono le caratteristiche per il clustering 
-features = [
-    'dAge', 'dIncome1', 'dOccup'
-]
 def elbow_plot(data,max_k):
     means=[]
     inertias=[]
@@ -37,9 +31,9 @@ def plot_cluster(dataset, labels, centroids):
     fig=plt.figure()
     #per grafico 3D
     ax = fig.add_subplot(projection='3d')
-    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], c=labels, cmap='viridis')   
+    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.5,c=labels, cmap='Pastel1')   
     #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
-    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], marker="*", color='red')
+    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], marker="*", color='red',alpha=1)
     plt.title('Cluster')
     plt.show()
 
@@ -72,7 +66,7 @@ def euclidean(data_point, centroids):
     #calcolo distanza euclidea (centroide-punto)^2 (torna una lista con le distanze del punto da tutti i centroidi)
     return np.sqrt(np.sum((centroids - data_point)**2, axis=1))
 
-@ray.remote
+@ray.remote(scheduling_strategy="SPREAD")
 def kmeans_map(points, centroids):
     map_results = []
     for point in points:
@@ -84,7 +78,7 @@ def kmeans_map(points, centroids):
         map_results.append((cluster, (point, 1)))
     return map_results
 
-@ray.remote
+@ray.remote(scheduling_strategy="SPREAD")
 def kmeans_reduce(cluster, points):
     #print(points)
     #somma tutti i punti
@@ -103,16 +97,15 @@ def calculate_new_centroids(reduce_results):
 
 
 def kmeans():
-    global dataset_url, features
-
     #Scarico i dati 
-    dataset_scaled = prepare_data(dataset_url, features)
+    #dataset_scaled = prepare_data(dataset_url, features)
+    k = int(input("Inserisci il numero di cluster (k): "))
+    dataset_scaled, _ = create_points(n_samples=1000000, n_features=3, n_clusters=k, random_state=42)
 
     k_max = 19
-    n_MAP = 7
+    n_MAP = 30
 
-    elbow_plot(dataset_scaled, k_max)
-    k = int(input("Inserisci il numero di cluster (k): "))
+    #elbow_plot(dataset_scaled, k_max)
     n_REDUCE=k
 
     # Scelgo i centroidi
@@ -120,10 +113,12 @@ def kmeans():
 
     #SPLIT
     partitions=split(dataset_scaled,n_MAP)
+    print(f"Numero di partizioni {len(partitions)}")
 
     ray.init()
     init=time.time()
     v = 0
+    tol = 1e-3
     while True:
         v += 1
         print(f"Ciclo {v}")
@@ -148,8 +143,10 @@ def kmeans():
         # Calcola nuovi centroidi
         new_centroids = calculate_new_centroids(reduce_results)
 
-        # Confronta i nuovi centroidi con quelli precedenti
-        if np.array_equal(new_centroids, centroids):
+        centroid_shift = euclidean(new_centroids, centroids).mean()
+        print(f"Variazione dei centroidi {centroid_shift}")
+
+        if centroid_shift < tol:
             break
         else:
             centroids = new_centroids
