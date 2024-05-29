@@ -31,9 +31,9 @@ def plot_cluster(dataset, labels, centroids):
     fig=plt.figure()
     #per grafico 3D
     ax = fig.add_subplot(projection='3d')
-    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.5,c=labels, cmap='Pastel1')   
+    ax.scatter(dataset[:, 0], dataset[:, 1],dataset[:,2], alpha=0.05,c=labels, cmap='summer')   
     #plt.scatter(dataset[:, 0], dataset[:, 1], c=labels, cmap='viridis')
-    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], marker="*", color='red',alpha=1)
+    ax.scatter(centroids[:, 0], centroids[:, 1],centroids[ :, 2], alpha=1, marker="*", color='red')
     plt.title('Cluster')
     plt.show()
 
@@ -100,7 +100,7 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     k = int(input("Inserisci il numero di cluster (k): "))
-    dataset_scaled, _ = create_points(n_samples=1000000, n_features=3, n_clusters=k, random_state=42)
+    dataset_scaled, _ = create_points(n_samples=100000, n_features=3, n_clusters=k, random_state=42)
 
     k_max = 19
     n_MAP = 30
