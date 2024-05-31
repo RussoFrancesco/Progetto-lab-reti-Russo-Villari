@@ -114,6 +114,7 @@ def kmeans():
 
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
+    del dataset_scaled
 
     #SPLIT
     partitions=split(dataset_scaled,n_MAP)
