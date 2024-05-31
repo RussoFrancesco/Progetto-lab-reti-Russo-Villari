@@ -18,6 +18,12 @@ def euclidean(data_point, centroids):
     return np.sqrt(np.sum((centroids - data_point) ** 2, axis=1))
 
 @ray.remote(scheduling_strategy="SPREAD")
+def kmeans_reduce(cluster, points):
+    sum_points = np.sum(points, axis=0)
+    num_points = len(points)
+    return cluster, sum_points, num_points
+
+@ray.remote(scheduling_strategy="SPREAD")
 def kmeans_map(points, centroids):
     map_results = []
     for point in points:
@@ -25,12 +31,6 @@ def kmeans_map(points, centroids):
         cluster = np.argmin(distances)
         map_results.append((cluster, (point, 1)))
     return map_results
-
-@ray.remote(scheduling_strategy="SPREAD")
-def kmeans_reduce(cluster, points):
-    sum_points = np.sum(points, axis=0)
-    num_points = len(points)
-    return cluster, sum_points, num_points
 
 def calculate_new_centroids(reduce_results):
     new_centroids = []
