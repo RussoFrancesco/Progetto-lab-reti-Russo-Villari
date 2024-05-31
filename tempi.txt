@@ -1,2 +1,0 @@
-Tempo di esecuzione: 179.98823809623718 secondi(prima esecuzione distribuita)
-Tempo di esecuzione: 45.34079074859619 secondi(prima esecuzione sequenziale)
