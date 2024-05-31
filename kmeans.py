@@ -3,11 +3,12 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-from mpl_toolkits.mplot3d import Axes3D
+import gc
 import ray
 import time
 from create_points import create_points
 from write_on_file import write_on_file
+import os
 
 def elbow_plot(data,max_k):
     means=[]
@@ -102,7 +103,7 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     k = int(input("Inserisci il numero di cluster (k): "))
-    n_punti = 40000000
+    n_punti = 15000000
     dataset_scaled, _ = create_points(n_samples=n_punti, n_features=3, n_clusters=k, random_state=42)
 
     k_max = 19
@@ -118,6 +119,7 @@ def kmeans():
     partitions=split(dataset_scaled,n_MAP)
     print(f"Numero di partizioni {len(partitions)}")
 
+    os.environ['RAY_memory_monitor_refresh_ms'] = '0'
     ray.init()
     init=time.time()
     v = 0
@@ -153,10 +155,17 @@ def kmeans():
             break
         else:
             centroids = new_centroids
+        
+        #garbage collect
+        del map_results
+        del map_futures
+        del reduce_inputs
+        del reduce_futures
+        del reduce_results
+        gc.collect()
 
 
     end=time.time()
-    ray.shutdown()
 
     print(f"Tempo di esecuzione: {end-init} secondi")
 
@@ -167,7 +176,7 @@ def kmeans():
         cluster = np.argmin(distances)
         final_labels.append(cluster)
 
-    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42)
+    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42, n_MAP)
     # Visualizza i cluster
     #plot_cluster(dataset_scaled, final_labels, centroids)
 

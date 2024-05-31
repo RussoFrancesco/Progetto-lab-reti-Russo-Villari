@@ -84,7 +84,7 @@ def kmeans():
     4) Ripeto passi 2 e 3 finchè i centroidi non sono uguali su 2 iterazioni successive'''
     
     k = int(input("Inserisci il numero di cluster (k): "))
-    num_punti = 40000000
+    num_punti = 10000000
     dataset_scaled, _ = create_points(n_samples=num_punti, n_features=3, n_clusters=k, random_state=42)
 
     # Scelgo i centroidi
