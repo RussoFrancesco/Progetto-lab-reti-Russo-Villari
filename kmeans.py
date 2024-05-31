@@ -114,10 +114,12 @@ def kmeans():
 
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
-    del dataset_scaled
+    
 
     #SPLIT
     partitions=split(dataset_scaled,n_MAP)
+    del dataset_scaled
+    gc.collect()
     print(f"Numero di partizioni {len(partitions)}")
 
     os.environ['RAY_memory_monitor_refresh_ms'] = '0'
@@ -131,7 +133,8 @@ def kmeans():
         #MAP
         map_futures = [kmeans_map.remote(partition, centroids) for partition in partitions]
         map_results = ray.get(map_futures)
-        
+        del map_futures
+
         # SHUFFLING
         reduce_inputs = [[] for _ in range(n_REDUCE)]
         for result in map_results:
@@ -139,15 +142,21 @@ def kmeans():
                 cluster_id = element[0]
                 point = element[1][0]
                 reduce_inputs[cluster_id].append(point)
+        
+        del map_results
 
         # REDUCE
         reduce_futures = [kmeans_reduce.remote(i, reduce_inputs[i]) for i in range(len(reduce_inputs))]
-        reduce_results = ray.get(reduce_futures)
+        del reduce_inputs
         
+        reduce_results = ray.get(reduce_futures)
+        del reduce_futures
+
         #print(reduce_results)
 
         # Calcola nuovi centroidi
         new_centroids = calculate_new_centroids(reduce_results)
+        del reduce_results
 
         centroid_shift = euclidean(new_centroids, centroids).mean()
         print(f"Variazione dei centroidi {centroid_shift}")
@@ -158,11 +167,6 @@ def kmeans():
             centroids = new_centroids
         
         #garbage collect
-        del map_results
-        del map_futures
-        del reduce_inputs
-        del reduce_futures
-        del reduce_results
         gc.collect()
 
 

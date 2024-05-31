@@ -3,6 +3,12 @@ import pandas as pd
 import csv
 import numpy as np
 
+
+def split(data,num_partition):
+    #splitto il dataset in n sub-array
+    partitions = np.array_split(data, num_partition)
+    return partitions
+
 # Creare e scrivere i punti nel file CSV
 with open('prova.csv', 'w', newline='') as f:
     writer = csv.writer(f)
@@ -13,7 +19,7 @@ with open('prova.csv', 'w', newline='') as f:
 
 # Leggere i punti dal file CSV
 punti = pd.read_csv('prova.csv')
-print(punti.head())
+
 
 # Convertire i punti letti dal CSV in array numpy
 # Usare ast.literal_eval per convertire le stringhe in liste in modo sicuro
@@ -21,6 +27,5 @@ import ast
 
 array_punti = np.array([np.array(ast.literal_eval(punto)) for punto in punti['points']])
 
-print(array_punti)
-for punto in array_punti:
-    print(type(punto))
+for partition in split(array_punti, 5):
+    print(len(partition))
