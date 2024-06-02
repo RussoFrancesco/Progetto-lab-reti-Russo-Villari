@@ -8,7 +8,6 @@ import ray
 import time
 from create_points import create_points
 from write_on_file import write_on_file
-import os
 
 def elbow_plot(data,max_k):
     means=[]
@@ -105,10 +104,10 @@ def kmeans():
     
     n_punti = 15000
     dataset_scaled, _ = create_points(n_samples=n_punti, n_features=68, n_clusters=3, random_state=42)
-    k_max = 19
+    k_max = 10
 
     elbow_plot(dataset_scaled, k_max)
-    
+
     k = int(input("Inserisci il numero di cluster (k): "))
     n_MAP = 7
 
@@ -125,7 +124,6 @@ def kmeans():
     gc.collect()
     print(f"Numero di partizioni {len(partitions)}")
 
-    os.environ['RAY_memory_monitor_refresh_ms'] = '0'
     ray.init()
     init=time.time()
     v = 0
