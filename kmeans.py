@@ -102,14 +102,17 @@ def calculate_new_centroids(reduce_results):
 def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
-    k = int(input("Inserisci il numero di cluster (k): "))
+    
     n_punti = 15000
-    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=68, n_clusters=k, random_state=42)
-
+    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=68, n_clusters=3, random_state=42)
     k_max = 19
+
+    elbow_plot(dataset_scaled, k_max)
+    
+    k = int(input("Inserisci il numero di cluster (k): "))
     n_MAP = 7
 
-    #elbow_plot(dataset_scaled, k_max)
+    
     n_REDUCE=k
 
     # Scelgo i centroidi
