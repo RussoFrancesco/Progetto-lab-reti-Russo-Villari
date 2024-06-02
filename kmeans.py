@@ -103,11 +103,11 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     k = int(input("Inserisci il numero di cluster (k): "))
-    n_punti = 15000000
-    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=3, n_clusters=k, random_state=42)
+    n_punti = 15000
+    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=68, n_clusters=k, random_state=42)
 
     k_max = 19
-    n_MAP = 30
+    n_MAP = 7
 
     #elbow_plot(dataset_scaled, k_max)
     n_REDUCE=k
@@ -118,7 +118,7 @@ def kmeans():
 
     #SPLIT
     partitions=split(dataset_scaled,n_MAP)
-    del dataset_scaled
+    #del dataset_scaled
     gc.collect()
     print(f"Numero di partizioni {len(partitions)}")
 
@@ -174,17 +174,16 @@ def kmeans():
 
     print(f"Tempo di esecuzione: {end-init} secondi")
 
+    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42, n_MAP)
     # Calcola le distanze finali dei cluster 
-    '''final_labels = []
+    final_labels = []
     for point in dataset_scaled:
         distances = euclidean(point, centroids)
         cluster = np.argmin(distances)
-        final_labels.append(cluster)'''
-
-    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42, n_MAP)
+        final_labels.append(cluster)
     # Visualizza i cluster
-    #plot_cluster(dataset_scaled, final_labels, centroids)
-
+    plot_cluster(dataset_scaled, final_labels, centroids)
+    
 
 
 # Esegui K-Means
