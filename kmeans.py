@@ -102,16 +102,16 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     
-    n_punti = 15000
-    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=68, n_clusters=3, random_state=42)
+    n_punti = 500000
+    n_features = 3
+    k = int(input("Inserisci il numero di cluster (k): "))
+    n_cluster = 3
+    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=n_features, n_clusters=n_cluster, random_state=42)
     k_max = 10
 
-    elbow_plot(dataset_scaled, k_max)
+    #elbow_plot(dataset_scaled, k_max)
+    n_MAP = 30
 
-    k = int(input("Inserisci il numero di cluster (k): "))
-    n_MAP = 7
-
-    
     n_REDUCE=k
 
     # Scelgo i centroidi
@@ -175,7 +175,7 @@ def kmeans():
 
     print(f"Tempo di esecuzione: {end-init} secondi")
 
-    write_on_file("tempi.csv",n_punti,k,end-init,"Distribuito",3,42, n_MAP)
+    write_on_file("tempi.csv",n_punti, n_features, k, end-init, "Distribuito", 3, 42, n_MAP)
     # Calcola le distanze finali dei cluster 
     final_labels = []
     for point in dataset_scaled:

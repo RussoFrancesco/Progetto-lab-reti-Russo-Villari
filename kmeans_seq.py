@@ -85,7 +85,8 @@ def kmeans():
     
     k = int(input("Inserisci il numero di cluster (k): "))
     num_punti = 10000000
-    dataset_scaled, _ = create_points(n_samples=num_punti, n_features=3, n_clusters=k, random_state=42)
+    n_features = 3
+    dataset_scaled, _ = create_points(n_samples=num_punti, n_features=n_features, n_clusters=k, random_state=42)
 
     # Scelgo i centroidi
     centroids = choose_centroids(dataset_scaled, k)
@@ -127,7 +128,7 @@ def kmeans():
 
     print(f"Tempo di esecuzione: {end-init} secondi")
     
-    write_on_file("tempi.csv", num_punti, k, end-init, "Sequenziale", 3, 42)
+    write_on_file("tempi.csv", num_punti, n_features, k, end-init, "Sequenziale", 3, 42)
     # Visualizza i cluster
     #plot_cluster(dataset_scaled, labels, centroids)
 
