@@ -14,25 +14,45 @@ df = pd.DataFrame(data)
 # Separa i dati in due DataFrames in base alla modalità
 df_distr = df[df['Modalità'] == 'Distribuito']
 df_seq = df[df['Modalità'] == 'Sequenziale']
+print (df_distr)
 
-# Crea un grafico a barre per la modalità Distribuito e Sequenziale
-bar_width = 0.35
-index = np.arange(len(df_distr))
+labels = ['500000', '1000000', '5000000', '10000000']
+distr = [df_distr["Tempo"][0],df_distr["Tempo"][2], df_distr["Tempo"][4], df_distr["Tempo"][6]]
+seq =  [df_seq["Tempo"][1],df_seq["Tempo"][3], df_seq["Tempo"][5], df_seq["Tempo"][7]]
 
-plt.figure(figsize=(10,5))
-bars1 = plt.bar(index, df_distr['Tempo'], bar_width, color='b', label='Distribuito')
-bars2 = plt.bar(index + bar_width, df_seq['Tempo'], bar_width, color='r', label='Sequenziale')
 
-for bar in bars1:
-    yval = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval, 2), va='bottom') # va: vertical alignment
+x = np.arange(len(labels))  # La posizione delle etichette
+width = 0.35  # La larghezza delle barre
 
-for bar in bars2:
-    yval = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval, 2), va='bottom')
+fig, ax = plt.subplots()
 
-plt.xlabel('Numero di punti')
-plt.ylabel('Tempo')
-plt.xticks(index + bar_width / 2, df_distr['Numero di punti'])  # posiziona le etichette sull'asse x
-plt.legend()
+
+bars1 = ax.bar(x - width/2, distr, width, label='Distribuito')
+bars2 = ax.bar(x + width/2, seq, width, label='Sequenziale')
+
+
+ax.set_xlabel('Numero di Punti')
+ax.set_ylabel('Tempo')
+ax.set_title('Confronto tra esecuzione sequenziale e distribuita')
+ax.set_xticks(x)
+ax.set_xticklabels(labels)
+ax.legend()
+
+
+ax.grid(False)
+
+
+def add_labels(bars):
+    for bar in bars:
+        height = bar.get_height()
+        ax.annotate(f'{height:.2f}',
+                    xy=(bar.get_x() + bar.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 punti di offset verticale
+                    textcoords="offset points",
+                    ha='center', va='bottom')
+
+add_labels(bars1)
+add_labels(bars2)
+
+
 plt.show()
