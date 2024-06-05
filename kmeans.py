@@ -102,7 +102,7 @@ def kmeans():
     #Scarico i dati 
     #dataset_scaled = prepare_data(dataset_url, features)
     
-    n_punti = 500000
+    n_punti = 5000000
     n_features = 3
     k = int(input("Inserisci il numero di cluster (k): "))
     n_cluster = 3
@@ -183,7 +183,7 @@ def kmeans():
         cluster = np.argmin(distances)
         final_labels.append(cluster)
     # Visualizza i cluster
-    plot_cluster(dataset_scaled, final_labels, centroids)
+    #plot_cluster(dataset_scaled, final_labels, centroids)
     
 
 
