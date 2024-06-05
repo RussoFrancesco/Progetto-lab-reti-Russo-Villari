@@ -7,9 +7,8 @@ data = pd.read_csv("tempi.csv")
 df = pd.DataFrame(data)
 
 # Separa i dati in due DataFrames in base alla modalità
-df_15 = df[df["Map"] == 15]
-df_30 = df[(df["Map"] == 30) & (df["Numero di cluster"] == 3)]
-df_60 = df[(df["Map"] == 60)]
+df_3 = df[(df["Map"] == 30) & (df["Numero di cluster"] == 3)]
+df_10 = df[(df["Map"] == 30) & (df["Numero di cluster"] == 10)]
 
 
 labels = ['500000', '1000000', '5000000', '10000000']
@@ -21,14 +20,13 @@ width = 0.3  # La larghezza delle barre
 fig, ax = plt.subplots()
 
 
-bars1 = ax.bar(x - width, df_15["Tempo"], width, label='15 Mappers')
-bars2 = ax.bar(x, df_30["Tempo"], width, label='30 Mappers')
-bars3 = ax.bar(x + width, df_60["Tempo"], width, label='60 Mappers')
+bars1 = ax.bar(x - width, df_3["Tempo"], width, label='3 Reducer')
+bars2 = ax.bar(x, df_10["Tempo"], width, label='10 reducer')
 
 
 ax.set_xlabel('Numero di Punti')
 ax.set_ylabel('Tempo')
-ax.set_title('Confronto tra numero di mappers')
+ax.set_title('Confronto tra numero di reducer')
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
 ax.legend()
@@ -46,9 +44,8 @@ def add_labels(bars):
                     textcoords="offset points",
                     ha='center', va='bottom')
 
-#add_labels(bars1)
-#add_labels(bars2)
-#add_labels(bars3)
+add_labels(bars1)
+add_labels(bars2)
 
 
 plt.show()
