@@ -104,12 +104,12 @@ def kmeans():
     
     n_punti = 5000000
     n_features = 3
-    k = int(input("Inserisci il numero di cluster (k): "))
     n_cluster = 3
-    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=n_features, n_clusters=n_cluster, random_state=42)
     k_max = 10
-
-    #elbow_plot(dataset_scaled, k_max)
+    dataset_scaled, _ = create_points(n_samples=n_punti, n_features=n_features, n_clusters=n_cluster, random_state=42)
+    elbow_plot(dataset_scaled, k_max)
+    k = int(input("Inserisci il numero di cluster (k): "))
+    
     n_MAP = 30
 
     n_REDUCE=k
